@@ -1,5 +1,6 @@
 
 import { ShoppingCart, Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface ProductCardProps {
   id: number;
@@ -12,31 +13,37 @@ interface ProductCardProps {
   inStock: boolean;
 }
 
-const ProductCard = ({ name, price, originalPrice, image, category, rating, inStock }: ProductCardProps) => {
+const ProductCard = ({ id, name, price, originalPrice, image, category, rating, inStock }: ProductCardProps) => {
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden group">
-      <div className="relative overflow-hidden">
-        <img 
-          src={image} 
-          alt={name}
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-        />
-        <div className="absolute top-2 left-2">
-          <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
-            {category}
-          </span>
-        </div>
-        {!inStock && (
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-              Stok Habis
+      <Link to={`/product/${id}`}>
+        <div className="relative overflow-hidden">
+          <img 
+            src={image} 
+            alt={name}
+            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+          <div className="absolute top-2 left-2">
+            <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
+              {category}
             </span>
           </div>
-        )}
-      </div>
+          {!inStock && (
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                Stok Habis
+              </span>
+            </div>
+          )}
+        </div>
+      </Link>
       
       <div className="p-4">
-        <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2">{name}</h3>
+        <Link to={`/product/${id}`}>
+          <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2 hover:text-green-600 transition-colors">
+            {name}
+          </h3>
+        </Link>
         
         <div className="flex items-center mb-2">
           <div className="flex items-center">
