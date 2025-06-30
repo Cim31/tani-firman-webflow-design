@@ -52,7 +52,7 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
             <div className="flex items-center space-x-2 text-gray-600">
               <Phone className="h-4 w-4" />
-              <span className="text-sm">0812-3456-7890</span>
+              <span className="text-sm">082151076210</span>
             </div>
             <Link 
               to="/login" 
@@ -102,7 +102,7 @@ const Header = () => {
             </Link>
             <div className="flex items-center space-x-2 text-gray-600 mt-4 pt-4 border-t">
               <Phone className="h-4 w-4" />
-              <span className="text-sm">0812-3456-7890</span>
+              <span className="text-sm">082151076210</span>
             </div>
           </nav>
         )}
