@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ShoppingCart, Plus, Minus, Trash2, X } from 'lucide-react';
+import { ShoppingCart as ShoppingCartIcon, Plus, Minus, Trash2, X } from 'lucide-react';
 import PaymentForm from './PaymentForm';
 
 interface ShoppingCartProps {
@@ -66,7 +66,7 @@ const ShoppingCart = ({ isOpen, onClose }: ShoppingCartProps) => {
       <Card className="w-full max-w-md max-h-[80vh] overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <CardTitle className="flex items-center space-x-2">
-            <ShoppingCart className="h-5 w-5" />
+            <ShoppingCartIcon className="h-5 w-5" />
             <span>Keranjang ({getTotalItems()})</span>
           </CardTitle>
           <Button variant="ghost" size="icon" onClick={onClose}>
