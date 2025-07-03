@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Leaf, UserPlus } from 'lucide-react';
@@ -43,9 +42,9 @@ const Register = () => {
       return;
     }
 
-    // Simulate registration and auto-login
+    // Simulate registration and auto-login with name
     console.log('Registration attempt:', formData);
-    login(formData.email, formData.password);
+    login(formData.email, formData.password, formData.name);
     navigate('/'); // Redirect to home after registration
   };
 

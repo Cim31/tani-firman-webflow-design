@@ -1,10 +1,15 @@
 
 import { createContext, useContext, useState, ReactNode } from 'react';
 
+interface User {
+  email: string;
+  name: string;
+}
+
 interface AuthContextType {
   isLoggedIn: boolean;
-  user: { email: string } | null;
-  login: (email: string, password: string) => void;
+  user: User | null;
+  login: (email: string, password: string, name?: string) => void;
   logout: () => void;
 }
 
@@ -20,13 +25,16 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState<{ email: string } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
-  const login = (email: string, password: string) => {
+  const login = (email: string, password: string, name?: string) => {
     // Simple demo login - in real app this would validate credentials
-    console.log('Login attempt:', { email, password });
+    console.log('Login attempt:', { email, password, name });
     setIsLoggedIn(true);
-    setUser({ email });
+    setUser({ 
+      email, 
+      name: name || email.split('@')[0] // Use name if provided, otherwise use email prefix
+    });
   };
 
   const logout = () => {
