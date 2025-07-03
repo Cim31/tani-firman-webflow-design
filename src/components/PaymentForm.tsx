@@ -4,15 +4,36 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, CalendarDays } from 'lucide-react';
+import { CalendarDays } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-interface PaymentFormProps {
-  productName: string;
-  productPrice: string;
+interface CartItem {
+  id: number;
+  name: string;
+  price: string;
   quantity: number;
 }
 
-const PaymentForm = ({ productName, productPrice, quantity }: PaymentFormProps) => {
+interface PaymentFormProps {
+  // For single product checkout
+  productName?: string;
+  productPrice?: string;
+  quantity?: number;
+  // For cart checkout
+  cartItems?: CartItem[];
+  totalAmount?: string;
+  onSuccess?: () => void;
+}
+
+const PaymentForm = ({ 
+  productName, 
+  productPrice, 
+  quantity = 1, 
+  cartItems, 
+  totalAmount,
+  onSuccess 
+}: PaymentFormProps) => {
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -37,12 +58,32 @@ const PaymentForm = ({ productName, productPrice, quantity }: PaymentFormProps) 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Payment form submitted:', formData);
-    // Handle payment processing here
+    
+    toast({
+      title: "Pesanan berhasil!",
+      description: "Pesanan Anda telah diterima dan akan segera diproses.",
+    });
+    
+    // Call onSuccess callback if provided (for cart checkout)
+    if (onSuccess) {
+      onSuccess();
+    }
   };
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 10 }, (_, i) => currentYear + i);
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
+
+  // Calculate total for single product or use provided total for cart
+  const getOrderTotal = () => {
+    if (cartItems && totalAmount) {
+      return totalAmount;
+    }
+    if (productPrice) {
+      return productPrice;
+    }
+    return 'Rp 0';
+  };
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
@@ -54,10 +95,25 @@ const PaymentForm = ({ productName, productPrice, quantity }: PaymentFormProps) 
           {/* Order Summary */}
           <div className="bg-gray-50 p-4 rounded-lg">
             <h3 className="font-semibold text-gray-800 mb-2">Ringkasan Pesanan</h3>
-            <div className="flex justify-between items-center">
-              <span>{productName} x{quantity}</span>
-              <span className="font-bold text-green-600">{productPrice}</span>
-            </div>
+            {cartItems ? (
+              <div className="space-y-2">
+                {cartItems.map((item) => (
+                  <div key={item.id} className="flex justify-between items-center text-sm">
+                    <span>{item.name} x{item.quantity}</span>
+                    <span className="text-green-600">{item.price}</span>
+                  </div>
+                ))}
+                <div className="border-t pt-2 flex justify-between items-center font-bold">
+                  <span>Total:</span>
+                  <span className="text-green-600">{totalAmount}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="flex justify-between items-center">
+                <span>{productName} x{quantity}</span>
+                <span className="font-bold text-green-600">{productPrice}</span>
+              </div>
+            )}
           </div>
 
           {/* Personal Information */}
@@ -221,7 +277,6 @@ const PaymentForm = ({ productName, productPrice, quantity }: PaymentFormProps) 
             </div>
           </div>
 
-          {/* Credit Card Details (shown only if credit card is selected) */}
           {formData.paymentMethod === 'credit_card' && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-800">Detail Kartu</h3>

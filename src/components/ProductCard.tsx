@@ -1,6 +1,8 @@
 
 import { ShoppingCart, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useCart } from '../contexts/CartContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface ProductCardProps {
   id: number;
@@ -14,6 +16,22 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ id, name, price, originalPrice, image, category, rating, inStock }: ProductCardProps) => {
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!inStock) return;
+    
+    addToCart({ id, name, price, image });
+    toast({
+      title: "Produk ditambahkan!",
+      description: `${name} telah ditambahkan ke keranjang`,
+    });
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden group">
       <Link to={`/product/${id}`}>
@@ -69,6 +87,7 @@ const ProductCard = ({ id, name, price, originalPrice, image, category, rating, 
         </div>
         
         <button 
+          onClick={handleAddToCart}
           className={`w-full py-2 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-2 ${
             inStock 
               ? 'bg-green-600 text-white hover:bg-green-700' 
