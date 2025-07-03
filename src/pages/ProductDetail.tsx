@@ -1,8 +1,8 @@
-
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import PaymentForm from '../components/PaymentForm';
 import { ArrowLeft, ShoppingCart, Star, Plus, Minus, Heart, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -10,6 +10,7 @@ const ProductDetail = () => {
   const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
 
   // Mock product data - in real app this would come from API
   const products = [
@@ -73,6 +74,33 @@ const ProductDetail = () => {
       setQuantity(prev => prev - 1);
     }
   };
+
+  const handleBuyNow = () => {
+    setShowPaymentForm(true);
+  };
+
+  if (showPaymentForm) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="container mx-auto px-4 py-8">
+          <button
+            onClick={() => setShowPaymentForm(false)}
+            className="inline-flex items-center space-x-2 text-green-600 hover:text-green-700 mb-6"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Kembali ke Detail Produk</span>
+          </button>
+          <PaymentForm 
+            productName={product.name}
+            productPrice={product.price}
+            quantity={quantity}
+          />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -194,11 +222,12 @@ const ProductDetail = () => {
               {/* Action Buttons */}
               <div className="flex space-x-4 mb-6">
                 <Button 
+                  onClick={handleBuyNow}
                   className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3"
                   disabled={!product.inStock}
                 >
                   <ShoppingCart className="h-5 w-5 mr-2" />
-                  {product.inStock ? 'Tambah ke Keranjang' : 'Stok Habis'}
+                  {product.inStock ? 'Beli Sekarang' : 'Stok Habis'}
                 </Button>
                 <Button variant="outline" size="icon" className="p-3">
                   <Heart className="h-5 w-5" />
