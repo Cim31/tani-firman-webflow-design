@@ -4,6 +4,7 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 interface User {
   email: string;
   name: string;
+  isAdmin?: boolean;
 }
 
 interface AuthContextType {
@@ -28,12 +29,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
   const login = (email: string, password: string, name?: string) => {
-    // Simple demo login - in real app this would validate credentials
     console.log('Login attempt:', { email, password, name });
+    
+    // Check if it's admin login
+    const isAdmin = email === 'Firman67muh@gmail.com' && password === '123123';
+    
     setIsLoggedIn(true);
     setUser({ 
       email, 
-      name: name || email.split('@')[0] // Use name if provided, otherwise use email prefix
+      name: name || (isAdmin ? 'Admin Firman' : email.split('@')[0]),
+      isAdmin
     });
   };
 

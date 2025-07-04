@@ -5,6 +5,7 @@ import { Menu, X, User, ShoppingCart, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import CartButton from './CartButton';
+import AdminButton from './AdminButton';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -51,10 +52,12 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <CartButton />
+            {user?.isAdmin ? <AdminButton /> : <CartButton />}
             {user ? (
               <div className="flex items-center space-x-2">
-                <span className="text-gray-700">Halo, {user.name}</span>
+                <span className="text-gray-700">
+                  Halo, {user.isAdmin ? 'Admin ' : ''}{user.name}
+                </span>
                 <Button variant="outline" onClick={handleLogout}>
                   Logout
                 </Button>
@@ -75,7 +78,7 @@ const Header = () => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-2">
-            <CartButton />
+            {user?.isAdmin ? <AdminButton /> : <CartButton />}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-600 hover:text-green-600 transition-colors"
@@ -130,7 +133,9 @@ const Header = () => {
               
               {user ? (
                 <div className="pt-4 border-t border-gray-200">
-                  <p className="text-gray-700 mb-2">Halo, {user.name}</p>
+                  <p className="text-gray-700 mb-2">
+                    Halo, {user.isAdmin ? 'Admin ' : ''}{user.name}
+                  </p>
                   <Button variant="outline" onClick={handleLogout} className="w-full">
                     Logout
                   </Button>
