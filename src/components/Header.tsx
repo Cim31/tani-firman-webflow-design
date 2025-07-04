@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, User, ShoppingCart } from 'lucide-react';
+import { Menu, X, User, ShoppingCart, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import CartButton from './CartButton';
@@ -35,6 +35,12 @@ const Header = () => {
             <Link to="/products" className="text-gray-600 hover:text-green-600 transition-colors">
               Produk
             </Link>
+            {user && (
+              <Link to="/orders" className="text-gray-600 hover:text-green-600 transition-colors flex items-center space-x-1">
+                <History className="h-4 w-4" />
+                <span>Pesanan</span>
+              </Link>
+            )}
             <Link to="/about" className="text-gray-600 hover:text-green-600 transition-colors">
               Tentang
             </Link>
@@ -97,6 +103,16 @@ const Header = () => {
               >
                 Produk
               </Link>
+              {user && (
+                <Link 
+                  to="/orders" 
+                  className="text-gray-600 hover:text-green-600 transition-colors flex items-center space-x-1"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <History className="h-4 w-4" />
+                  <span>Pesanan</span>
+                </Link>
+              )}
               <Link 
                 to="/about" 
                 className="text-gray-600 hover:text-green-600 transition-colors"
