@@ -40,24 +40,24 @@ const Dashboard = () => {
       <div className="flex border-b">
         <button
           onClick={() => setActiveTab('overview')}
-          className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+          className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center ${
             activeTab === 'overview' 
               ? 'border-green-600 text-green-600' 
               : 'border-transparent text-gray-600 hover:text-green-600'
           }`}
         >
-          <User className="h-4 w-4 inline-block mr-2" />
+          <User className="h-4 w-4 mr-2" />
           Ringkasan
         </button>
         <button
           onClick={() => setActiveTab('orders')}
-          className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+          className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center ${
             activeTab === 'orders' 
               ? 'border-green-600 text-green-600' 
               : 'border-transparent text-gray-600 hover:text-green-600'
           }`}
         >
-          <History className="h-4 w-4 inline-block mr-2" />
+          <History className="h-4 w-4 mr-2" />
           Riwayat Pesanan
         </button>
       </div>
