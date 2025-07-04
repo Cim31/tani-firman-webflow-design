@@ -1,11 +1,11 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarDays } from 'lucide-react';
+import { CalendarDays, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import OrderHistory from './OrderHistory';
 
 interface CartItem {
   id: number;
@@ -34,6 +34,7 @@ const PaymentForm = ({
   onSuccess 
 }: PaymentFormProps) => {
   const { toast } = useToast();
+  const [showOrderHistory, setShowOrderHistory] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -64,11 +65,33 @@ const PaymentForm = ({
       description: "Pesanan Anda telah diterima dan akan segera diproses.",
     });
     
+    // Show order history after successful payment
+    setShowOrderHistory(true);
+    
     // Call onSuccess callback if provided (for cart checkout)
     if (onSuccess) {
       onSuccess();
     }
   };
+
+  // If showing order history, render that instead
+  if (showOrderHistory) {
+    return (
+      <div className="w-full max-w-4xl mx-auto">
+        <div className="mb-6">
+          <Button
+            variant="outline"
+            onClick={() => setShowOrderHistory(false)}
+            className="flex items-center space-x-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Kembali ke Form Pembayaran</span>
+          </Button>
+        </div>
+        <OrderHistory />
+      </div>
+    );
+  }
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 10 }, (_, i) => currentYear + i);
