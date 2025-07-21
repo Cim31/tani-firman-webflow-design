@@ -12,6 +12,7 @@ import pestisida from '@/assets/pestisida.jpg';
 import benihJagung from '@/assets/benih-jagung.jpg';
 import pupukCair from '@/assets/pupuk-cair.jpg';
 import insektisida from '@/assets/insektisida.jpg';
+import cangkul from '@/assets/cangkul.jpg';
 
 interface Product {
   id: number;

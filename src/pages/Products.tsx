@@ -10,6 +10,7 @@ import pestisida from '@/assets/pestisida.jpg';
 import benihJagung from '@/assets/benih-jagung.jpg';
 import pupukCair from '@/assets/pupuk-cair.jpg';
 import insektisida from '@/assets/insektisida.jpg';
+import cangkul from '@/assets/cangkul.jpg';
 
 const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState('Semua');
@@ -42,7 +43,7 @@ const Products = () => {
       name: 'Cangkul Besi Berkualitas Tinggi',
       price: 'Rp 125.000',
       originalPrice: 'Rp 140.000',
-      image: '/placeholder.svg',
+      image: cangkul,
       category: 'Alat Pertanian',
       rating: 5,
       inStock: true,

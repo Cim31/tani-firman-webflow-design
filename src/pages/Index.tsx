@@ -7,6 +7,8 @@ import { ArrowRight, Leaf, Shield, Truck, Headphones, Star, Users } from 'lucide
 import pupukOrganik from '@/assets/pupuk-organik.jpg';
 import benihPadi from '@/assets/benih-padi.jpg';
 import pestisida from '@/assets/pestisida.jpg';
+import cangkul from '@/assets/cangkul.jpg';
+import heroFarming from '@/assets/hero-farming.jpg';
 
 const Index = () => {
   const featuredProducts = [
@@ -34,7 +36,7 @@ const Index = () => {
       name: 'Cangkul Besi Berkualitas Tinggi',
       price: 'Rp 125.000',
       originalPrice: 'Rp 140.000',
-      image: '/placeholder.svg',
+      image: cangkul,
       category: 'Alat Pertanian',
       rating: 5,
       inStock: true,
@@ -129,7 +131,7 @@ const Index = () => {
             </div>
             <div className="relative">
               <img 
-                src="/placeholder.svg" 
+                src={heroFarming} 
                 alt="Petani Indonesia"
                 className="rounded-lg shadow-2xl w-full h-96 object-cover"
               />
