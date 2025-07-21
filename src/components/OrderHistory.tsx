@@ -37,7 +37,9 @@ const OrderHistory = () => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   useEffect(() => {
+    console.log('OrderHistory - useEffect triggered', { isLoggedIn, user });
     if (isLoggedIn && user) {
+      console.log('User is logged in, setting up mock orders...');
       // Mock order data - in real app, this would fetch from API
       const mockOrders: Order[] = [
         {
