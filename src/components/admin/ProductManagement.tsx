@@ -6,6 +6,12 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
+import pupukOrganik from '@/assets/pupuk-organik.jpg';
+import benihPadi from '@/assets/benih-padi.jpg';
+import pestisida from '@/assets/pestisida.jpg';
+import benihJagung from '@/assets/benih-jagung.jpg';
+import pupukCair from '@/assets/pupuk-cair.jpg';
+import insektisida from '@/assets/insektisida.jpg';
 
 interface Product {
   id: number;
@@ -24,7 +30,7 @@ const ProductManagement = () => {
       price: 25000,
       stock: 100,
       description: 'Pupuk organik berkualitas tinggi untuk pertumbuhan tanaman optimal',
-      image: '/placeholder.svg'
+      image: pupukOrganik
     },
     {
       id: 2,
@@ -32,7 +38,39 @@ const ProductManagement = () => {
       price: 15000,
       stock: 200,
       description: 'Benih padi varietas unggul dengan hasil panen maksimal',
-      image: '/placeholder.svg'
+      image: benihPadi
+    },
+    {
+      id: 3,
+      name: 'Pestisida Organik',
+      price: 35000,
+      stock: 50,
+      description: 'Pestisida ramah lingkungan untuk melindungi tanaman dari hama',
+      image: pestisida
+    },
+    {
+      id: 4,
+      name: 'Benih Jagung Hibrida',
+      price: 20000,
+      stock: 150,
+      description: 'Benih jagung hibrida dengan produktivitas tinggi',
+      image: benihJagung
+    },
+    {
+      id: 5,
+      name: 'Pupuk Cair NPK',
+      price: 18000,
+      stock: 75,
+      description: 'Pupuk cair lengkap dengan kandungan NPK untuk nutrisi tanaman',
+      image: pupukCair
+    },
+    {
+      id: 6,
+      name: 'Insektisida Alami',
+      price: 28000,
+      stock: 60,
+      description: 'Insektisida berbahan alami yang aman untuk lingkungan',
+      image: insektisida
     }
   ]);
 
@@ -43,7 +81,7 @@ const ProductManagement = () => {
     price: 0,
     stock: 0,
     description: '',
-    image: '/placeholder.svg'
+    image: pupukOrganik
   });
 
   const handleEdit = (product: Product) => {
@@ -73,7 +111,7 @@ const ProductManagement = () => {
       setProducts([...products, newProduct]);
       setIsAddingNew(false);
     }
-    setFormData({ name: '', price: 0, stock: 0, description: '', image: '/placeholder.svg' });
+    setFormData({ name: '', price: 0, stock: 0, description: '', image: pupukOrganik });
   };
 
   const handleDelete = (id: number) => {
@@ -85,7 +123,7 @@ const ProductManagement = () => {
   const handleCancel = () => {
     setEditingProduct(null);
     setIsAddingNew(false);
-    setFormData({ name: '', price: 0, stock: 0, description: '', image: '/placeholder.svg' });
+    setFormData({ name: '', price: 0, stock: 0, description: '', image: pupukOrganik });
   };
 
   return (
