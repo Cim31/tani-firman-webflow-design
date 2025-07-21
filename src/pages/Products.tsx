@@ -4,6 +4,12 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import { Search, Filter } from 'lucide-react';
+import pupukOrganik from '@/assets/pupuk-organik.jpg';
+import benihPadi from '@/assets/benih-padi.jpg';
+import pestisida from '@/assets/pestisida.jpg';
+import benihJagung from '@/assets/benih-jagung.jpg';
+import pupukCair from '@/assets/pupuk-cair.jpg';
+import insektisida from '@/assets/insektisida.jpg';
 
 const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState('Semua');
@@ -17,7 +23,7 @@ const Products = () => {
       name: 'Benih Padi Unggul IR64',
       price: 'Rp 85.000',
       originalPrice: 'Rp 95.000',
-      image: '/placeholder.svg',
+      image: benihPadi,
       category: 'Benih',
       rating: 5,
       inStock: true,
@@ -26,7 +32,7 @@ const Products = () => {
       id: 2,
       name: 'Pupuk Organik Kompos Premium',
       price: 'Rp 45.000',
-      image: '/placeholder.svg',
+      image: pupukOrganik,
       category: 'Pupuk', 
       rating: 4,
       inStock: true,
@@ -45,7 +51,7 @@ const Products = () => {
       id: 4,
       name: 'Benih Jagung Hibrida',
       price: 'Rp 65.000',
-      image: '/placeholder.svg',
+      image: benihJagung,
       category: 'Benih',
       rating: 4,
       inStock: false,
@@ -54,7 +60,7 @@ const Products = () => {
       id: 5,
       name: 'Pestisida Organik Anti Hama',
       price: 'Rp 35.000',
-      image: '/placeholder.svg',
+      image: pestisida,
       category: 'Pestisida',
       rating: 4,
       inStock: true,
@@ -63,7 +69,7 @@ const Products = () => {
       id: 6,
       name: 'Pupuk NPK 16-16-16',
       price: 'Rp 75.000',
-      image: '/placeholder.svg',
+      image: pupukCair,
       category: 'Pupuk',
       rating: 5,
       inStock: true,

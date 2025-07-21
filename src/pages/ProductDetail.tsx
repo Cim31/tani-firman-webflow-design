@@ -5,6 +5,8 @@ import Footer from '../components/Footer';
 import PaymentForm from '../components/PaymentForm';
 import { ArrowLeft, ShoppingCart, Star, Plus, Minus, Heart, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import benihPadi from '@/assets/benih-padi.jpg';
+import pupukOrganik from '@/assets/pupuk-organik.jpg';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -19,7 +21,7 @@ const ProductDetail = () => {
       name: 'Benih Padi Unggul IR64',
       price: 'Rp 85.000',
       originalPrice: 'Rp 95.000',
-      images: ['/placeholder.svg', '/placeholder.svg', '/placeholder.svg'],
+      images: [benihPadi, benihPadi, benihPadi],
       category: 'Benih',
       rating: 5,
       reviews: 124,
@@ -43,7 +45,7 @@ const ProductDetail = () => {
       id: 2,
       name: 'Pupuk Organik Kompos Premium',
       price: 'Rp 45.000',
-      images: ['/placeholder.svg', '/placeholder.svg'],
+      images: [pupukOrganik, pupukOrganik],
       category: 'Pupuk',
       rating: 4,
       reviews: 89,

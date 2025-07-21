@@ -4,6 +4,9 @@ import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Leaf, Shield, Truck, Headphones, Star, Users } from 'lucide-react';
+import pupukOrganik from '@/assets/pupuk-organik.jpg';
+import benihPadi from '@/assets/benih-padi.jpg';
+import pestisida from '@/assets/pestisida.jpg';
 
 const Index = () => {
   const featuredProducts = [
@@ -12,7 +15,7 @@ const Index = () => {
       name: 'Benih Padi Unggul IR64',
       price: 'Rp 85.000',
       originalPrice: 'Rp 95.000',
-      image: '/placeholder.svg',
+      image: benihPadi,
       category: 'Benih',
       rating: 5,
       inStock: true,
@@ -21,7 +24,7 @@ const Index = () => {
       id: 2,
       name: 'Pupuk Organik Kompos Premium',
       price: 'Rp 45.000',
-      image: '/placeholder.svg',
+      image: pupukOrganik,
       category: 'Pupuk',
       rating: 4,
       inStock: true,
@@ -40,7 +43,7 @@ const Index = () => {
       id: 4,
       name: 'Pestisida Organik Anti Hama',
       price: 'Rp 35.000',
-      image: '/placeholder.svg',
+      image: pestisida,
       category: 'Pestisida',
       rating: 4,
       inStock: true,
