@@ -5,6 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Package, Calendar, MapPin, CreditCard, Eye } from 'lucide-react';
+import benihPadi from '@/assets/benih-padi.jpg';
+import pupukOrganik from '@/assets/pupuk-organik.jpg';
+import pestisida from '@/assets/pestisida.jpg';
+import benihJagung from '@/assets/benih-jagung.jpg';
+import pupukCair from '@/assets/pupuk-cair.jpg';
+import cangkul from '@/assets/cangkul.jpg';
 
 interface OrderItem {
   id: number;
@@ -38,8 +44,8 @@ const OrderHistory = () => {
           id: 'ORD-001',
           date: '2024-01-15',
           items: [
-            { id: 1, name: 'Benih Padi Unggul', price: 'Rp 45.000', quantity: 2, image: '/placeholder.svg' },
-            { id: 2, name: 'Pupuk Organik', price: 'Rp 35.000', quantity: 1, image: '/placeholder.svg' }
+            { id: 1, name: 'Benih Padi Unggul', price: 'Rp 45.000', quantity: 2, image: benihPadi },
+            { id: 2, name: 'Pupuk Organik', price: 'Rp 35.000', quantity: 1, image: pupukOrganik }
           ],
           total: 'Rp 125.000',
           status: 'delivered',
@@ -51,13 +57,27 @@ const OrderHistory = () => {
           id: 'ORD-002',
           date: '2024-01-20',
           items: [
-            { id: 3, name: 'Pestisida Organik', price: 'Rp 55.000', quantity: 1, image: '/placeholder.svg' }
+            { id: 3, name: 'Pestisida Organik', price: 'Rp 55.000', quantity: 1, image: pestisida }
           ],
           total: 'Rp 55.000',
           status: 'shipped',
           address: 'Jl. Merdeka No. 123, Jakarta',
           paymentMethod: 'Transfer Bank',
           deliveryDate: '2024-01-23'
+        },
+        {
+          id: 'ORD-003',
+          date: '2024-01-25',
+          items: [
+            { id: 4, name: 'Benih Jagung Hibrida', price: 'Rp 65.000', quantity: 1, image: benihJagung },
+            { id: 5, name: 'Pupuk Cair NPK', price: 'Rp 48.000', quantity: 2, image: pupukCair },
+            { id: 6, name: 'Cangkul Besi Berkualitas Tinggi', price: 'Rp 125.000', quantity: 1, image: cangkul }
+          ],
+          total: 'Rp 286.000',
+          status: 'processing',
+          address: 'Jl. Merdeka No. 123, Jakarta',
+          paymentMethod: 'Transfer Bank',
+          deliveryDate: '2024-01-28'
         }
       ];
       setOrders(mockOrders);
