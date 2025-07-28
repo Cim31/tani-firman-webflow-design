@@ -32,7 +32,7 @@ const Contact = () => {
     {
       icon: MapPin,
       title: 'Alamat',
-      details: ['Jl. Pertanian No. 123', 'Kota Pertanian, Jawa Barat 12345'],
+      details: ['Jl. Poros Bakaru, Pinrang', 'Kec Lembang, 92534'],
     },
     {
       icon: Phone,
@@ -56,10 +56,10 @@ const Contact = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-green-600 to-green-800 text-white py-16">
+      <section className="bg-gradient-to-r from-green-600 to-green-800 text-white py-16 overflow-hidden">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Hubungi Kami</h1>
-          <p className="text-xl text-green-100 max-w-2xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in">Hubungi Kami</h1>
+          <p className="text-xl text-green-100 max-w-2xl mx-auto animate-fade-in animation-delay-200">
             Kami siap membantu Anda dengan kebutuhan pertanian. Jangan ragu untuk menghubungi kami!
           </p>
         </div>
@@ -70,13 +70,17 @@ const Contact = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
             {contactInfo.map((info, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md p-6 text-center">
-                <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <info.icon className="h-8 w-8 text-green-600" />
+              <div 
+                key={index} 
+                className="bg-white rounded-lg shadow-md p-6 text-center hover-scale transition-all duration-300 hover:shadow-xl animate-fade-in"
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
+                <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform duration-300 hover:scale-110">
+                  <info.icon className="h-8 w-8 text-green-600 transition-all duration-300" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">{info.title}</h3>
                 {info.details.map((detail, detailIndex) => (
-                  <p key={detailIndex} className="text-gray-600 text-sm mb-1">{detail}</p>
+                  <p key={detailIndex} className="text-gray-600 text-sm mb-1 transition-colors duration-300 hover:text-green-600">{detail}</p>
                 ))}
               </div>
             ))}
@@ -85,7 +89,7 @@ const Contact = () => {
           {/* Contact Form & Map */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Form */}
-            <div className="bg-white rounded-lg shadow-md p-8">
+            <div className="bg-white rounded-lg shadow-md p-8 animate-fade-in hover:shadow-xl transition-all duration-300">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">Kirim Pesan</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -97,7 +101,7 @@ const Contact = () => {
                       type="text"
                       name="name"
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 hover:border-green-400"
                       value={formData.name}
                       onChange={handleInputChange}
                     />
@@ -110,7 +114,7 @@ const Contact = () => {
                       type="email"
                       name="email"
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 hover:border-green-400"
                       value={formData.email}
                       onChange={handleInputChange}
                     />
@@ -125,7 +129,7 @@ const Contact = () => {
                     <input
                       type="tel"
                       name="phone"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 hover:border-green-400"
                       value={formData.phone}
                       onChange={handleInputChange}
                     />
@@ -137,7 +141,7 @@ const Contact = () => {
                     <select
                       name="subject"
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 hover:border-green-400"
                       value={formData.subject}
                       onChange={handleInputChange}
                     >
@@ -159,7 +163,7 @@ const Contact = () => {
                     name="message"
                     required
                     rows={5}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 hover:border-green-400"
                     placeholder="Tuliskan pesan Anda di sini..."
                     value={formData.message}
                     onChange={handleInputChange}
@@ -168,32 +172,34 @@ const Contact = () => {
 
                 <button
                   type="submit"
-                  className="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors duration-200 flex items-center justify-center space-x-2"
+                  className="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-all duration-300 flex items-center justify-center space-x-2 hover-scale hover:shadow-lg"
                 >
-                  <Send className="h-5 w-5" />
+                  <Send className="h-5 w-5 transition-transform duration-300" />
                   <span>Kirim Pesan</span>
                 </button>
               </form>
             </div>
 
             {/* Map Placeholder */}
-            <div className="bg-white rounded-lg shadow-md p-8">
+            <div className="bg-white rounded-lg shadow-md p-8 animate-fade-in hover:shadow-xl transition-all duration-300">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">Lokasi Kami</h2>
-              <div className="bg-gray-200 h-64 rounded-lg flex items-center justify-center mb-6">
-                <div className="text-center text-gray-500">
-                  <MapPin className="h-12 w-12 mx-auto mb-2" />
-                  <p>Peta Lokasi Toko</p>
-                  <p className="text-sm">Jl. Pertanian No. 123, Kota Pertanian</p>
+              <div className="bg-gray-200 h-64 rounded-lg flex items-center justify-center mb-6 hover:bg-gray-300 transition-colors duration-300 cursor-pointer" 
+                   onClick={() => window.open('https://maps.app.goo.gl/ixNF4zWYgGswwCpG9', '_blank')}>
+                <div className="text-center text-gray-500 hover:text-gray-600 transition-colors duration-300">
+                  <MapPin className="h-12 w-12 mx-auto mb-2 animate-pulse" />
+                  <p className="font-semibold">Klik untuk membuka peta</p>
+                  <p className="text-sm">Jl. Poros Bakaru, Pinrang, Kec Lembang</p>
                 </div>
               </div>
               
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-800">Cara Menuju Lokasi:</h3>
                 <ul className="text-gray-600 space-y-2 text-sm">
-                  <li>• Dari Terminal Kota, naik angkot jurusan Pasar Pertanian</li>
-                  <li>• Turun di depan Bank BRI, jalan kaki 200m ke arah utara</li>
-                  <li>• Toko berada di sebelah kanan jalan, bercat hijau</li>
-                  <li>• Tersedia parkir motor dan mobil</li>
+                  <li className="hover:text-green-600 transition-colors duration-300">• Dari pusat kota Pinrang, ambil jalan menuju Kecamatan Lembang</li>
+                  <li className="hover:text-green-600 transition-colors duration-300">• Ikuti Jl. Poros Bakaru hingga menemukan toko kami</li>
+                  <li className="hover:text-green-600 transition-colors duration-300">• Toko berada di jalur utama Poros Bakaru, mudah ditemukan</li>
+                  <li className="hover:text-green-600 transition-colors duration-300">• Tersedia area parkir yang luas untuk motor dan mobil</li>
+                  <li className="hover:text-green-600 transition-colors duration-300">• Dapat diakses dengan kendaraan umum atau pribadi</li>
                 </ul>
               </div>
             </div>
