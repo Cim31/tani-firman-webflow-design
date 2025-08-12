@@ -101,7 +101,7 @@ const Index = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-gray-900 text-white py-20 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-green-600 via-emerald-700 to-green-800 text-white py-20 overflow-hidden">
         {/* Modern geometric background */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute inset-0" style={{
@@ -111,9 +111,9 @@ const Index = () => {
         
         {/* Minimal floating elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-20 w-2 h-2 bg-blue-400 rounded-full opacity-60 animate-pulse"></div>
+          <div className="absolute top-20 left-20 w-2 h-2 bg-green-300 rounded-full opacity-60 animate-pulse"></div>
           <div className="absolute top-40 right-32 w-1 h-1 bg-white rounded-full opacity-40 animate-ping"></div>
-          <div className="absolute bottom-32 left-32 w-1.5 h-1.5 bg-emerald-400 rounded-full opacity-50 animate-pulse animation-delay-1000"></div>
+          <div className="absolute bottom-32 left-32 w-1.5 h-1.5 bg-emerald-300 rounded-full opacity-50 animate-pulse animation-delay-1000"></div>
           <div className="absolute bottom-20 right-20 w-2 h-2 bg-white rounded-full opacity-30 animate-ping animation-delay-2000"></div>
         </div>
         
@@ -121,32 +121,32 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="animate-fade-in">
               <div className="mb-6">
-                <span className="inline-block border border-white/20 text-white/80 px-4 py-2 rounded-full text-sm font-medium animate-fade-in animation-delay-200 backdrop-blur-sm">
-                  ✦ Premium Agriculture Solutions
+                <span className="inline-block border border-green-300/30 text-green-100 px-4 py-2 rounded-full text-sm font-medium animate-fade-in animation-delay-200 backdrop-blur-sm">
+                  🌱 Premium Agriculture Solutions
                 </span>
               </div>
               <h1 className="text-4xl md:text-6xl font-display font-bold mb-8 leading-tight animate-fade-in animation-delay-400">
-                <span className="bg-gradient-to-r from-white via-blue-100 to-emerald-100 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-white via-green-100 to-emerald-100 bg-clip-text text-transparent">
                   Firman Tani
                 </span>
-                <span className="block text-2xl md:text-3xl font-sans font-light text-white/80 animate-fade-in animation-delay-600 mt-2">
+                <span className="block text-2xl md:text-3xl font-sans font-light text-green-100 animate-fade-in animation-delay-600 mt-2">
                   Modern Farming Excellence
                 </span>
               </h1>
-              <p className="text-lg mb-10 text-white/70 leading-relaxed animate-fade-in animation-delay-1000 font-light max-w-xl">
+              <p className="text-lg mb-10 text-green-50 leading-relaxed animate-fade-in animation-delay-1000 font-light max-w-xl">
                 Solusi pertanian modern dengan produk berkualitas tinggi dan teknologi terdepan untuk hasil panen yang optimal
               </p>
               <div className="flex flex-col sm:flex-row gap-4 animate-fade-in animation-delay-1200">
                 <Link
                   to="/products"
-                  className="group bg-white text-slate-900 px-8 py-3 rounded-lg font-medium hover:bg-white/90 transition-all duration-300 text-center flex items-center justify-center space-x-2 transform hover:scale-105"
+                  className="group bg-white text-green-700 px-8 py-3 rounded-lg font-medium hover:bg-green-50 transition-all duration-300 text-center flex items-center justify-center space-x-2 transform hover:scale-105"
                 >
                   <span>Shop Products</span>
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
                 <Link
                   to="/contact"
-                  className="group border border-white/30 text-white px-8 py-3 rounded-lg font-medium hover:bg-white/10 transition-all duration-300 text-center transform hover:scale-105"
+                  className="group border border-green-300/50 text-white px-8 py-3 rounded-lg font-medium hover:bg-green-600/20 transition-all duration-300 text-center transform hover:scale-105"
                 >
                   <span>Get Expert Help</span>
                 </Link>
@@ -164,7 +164,7 @@ const Index = () => {
               
               {/* Simple floating accent */}
               <div className="absolute -top-3 -right-3 w-6 h-6 bg-emerald-400 rounded-full animate-pulse opacity-80"></div>
-              <div className="absolute -bottom-3 -left-3 w-4 h-4 bg-blue-400 rounded-full animate-pulse animation-delay-1000 opacity-60"></div>
+              <div className="absolute -bottom-3 -left-3 w-4 h-4 bg-green-400 rounded-full animate-pulse animation-delay-1000 opacity-60"></div>
             </div>
           </div>
         </div>
@@ -173,12 +173,12 @@ const Index = () => {
       {/* Services Section */}
       <section className="py-20 bg-white relative">
         {/* Minimal background accent */}
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-green-200 to-transparent"></div>
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16 animate-fade-in">
-            <div className="inline-block border border-gray-200 px-6 py-2 rounded-full mb-6">
-              <span className="text-gray-600 font-medium">Why Choose Us</span>
+            <div className="inline-block border border-green-200 px-6 py-2 rounded-full mb-6">
+              <span className="text-green-700 font-medium">Why Choose Us</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-4">
               Premium Solutions
@@ -192,11 +192,11 @@ const Index = () => {
             {services.map((service, index) => (
               <div 
                 key={index} 
-                className="group bg-gray-50 rounded-lg p-6 text-center hover:bg-gray-100 transition-all duration-300 animate-fade-in"
+                className="group bg-green-50/50 rounded-lg p-6 text-center hover:bg-green-100 hover:shadow-lg transition-all duration-300 animate-fade-in border border-green-100"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-gray-300 transition-colors duration-300">
-                  <service.icon className="h-6 w-6 text-gray-600" />
+                <div className="w-12 h-12 bg-green-200 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-green-300 transition-colors duration-300">
+                  <service.icon className="h-6 w-6 text-green-700" />
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">{service.title}</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">{service.description}</p>
@@ -207,14 +207,14 @@ const Index = () => {
       </section>
 
       {/* Featured Products */}
-      <section className="py-20 bg-gray-50 relative">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+      <section className="py-20 bg-green-50/30 relative">
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-green-200 to-transparent"></div>
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16 animate-fade-in">
-            <div className="inline-flex items-center border border-gray-200 px-4 py-2 rounded-full mb-6">
-              <Star className="w-4 h-4 text-gray-600 mr-2" />
-              <span className="text-gray-600 font-medium">Featured Products</span>
+            <div className="inline-flex items-center border border-green-200 px-4 py-2 rounded-full mb-6">
+              <Star className="w-4 h-4 text-green-600 mr-2" />
+              <span className="text-green-700 font-medium">Featured Products</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-4">
               Premium Collection
@@ -239,7 +239,7 @@ const Index = () => {
           <div className="text-center animate-fade-in animation-delay-1000">
             <Link
               to="/products"
-              className="group inline-flex items-center bg-gray-900 text-white px-8 py-3 rounded-lg font-medium hover:bg-gray-800 transition-all duration-300 space-x-2 transform hover:scale-105"
+              className="group inline-flex items-center bg-green-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition-all duration-300 space-x-2 transform hover:scale-105"
             >
               <span>View All Products</span>
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -249,7 +249,7 @@ const Index = () => {
       </section>
 
       {/* Statistics */}
-      <section className="relative py-20 bg-slate-900 text-white">
+      <section className="relative py-20 bg-green-700 text-white">
         {/* Minimal background pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute inset-0" style={{
@@ -262,7 +262,7 @@ const Index = () => {
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
               Trusted Excellence
             </h2>
-            <p className="text-white/70 max-w-2xl mx-auto">
+            <p className="text-green-100 max-w-2xl mx-auto">
               Numbers that reflect our commitment to quality
             </p>
           </div>
@@ -270,15 +270,15 @@ const Index = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="animate-fade-in">
               <div className="text-4xl md:text-5xl font-display font-bold mb-2 text-white">5000+</div>
-              <div className="text-white/70">Farmers Served</div>
+              <div className="text-green-100">Farmers Served</div>
             </div>
             <div className="animate-fade-in animation-delay-200">
               <div className="text-4xl md:text-5xl font-display font-bold mb-2 text-white">500+</div>
-              <div className="text-white/70">Quality Products</div>
+              <div className="text-green-100">Quality Products</div>
             </div>
             <div className="animate-fade-in animation-delay-400">
               <div className="text-4xl md:text-5xl font-display font-bold mb-2 text-white">15+</div>
-              <div className="text-white/70">Years Experience</div>
+              <div className="text-green-100">Years Experience</div>
             </div>
             <div className="animate-fade-in animation-delay-600">
               <div className="text-5xl md:text-6xl font-display font-bold mb-2 bg-gradient-to-r from-white to-green-100 bg-clip-text text-transparent animate-pulse animation-delay-1500">98%</div>
