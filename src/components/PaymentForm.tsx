@@ -5,6 +5,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CalendarDays, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import OrderHistory from './OrderHistory';
 
 interface CartItem {
@@ -34,7 +36,9 @@ const PaymentForm = ({
   onSuccess 
 }: PaymentFormProps) => {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [showOrderHistory, setShowOrderHistory] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -56,21 +60,102 @@ const PaymentForm = ({
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Payment form submitted:', formData);
     
-    toast({
-      title: "Pesanan berhasil!",
-      description: "Pesanan Anda telah diterima dan akan segera diproses.",
-    });
-    
-    // Show order history after successful payment
-    setShowOrderHistory(true);
-    
-    // Call onSuccess callback if provided (for cart checkout)
-    if (onSuccess) {
-      onSuccess();
+    if (!user) {
+      toast({
+        title: "Error",
+        description: "Anda harus login terlebih dahulu untuk melakukan pemesanan",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Calculate total amount
+      const totalPrice = totalAmount ? 
+        parseFloat(totalAmount.replace(/[^\d]/g, '')) : 
+        parseFloat(productPrice?.replace(/[^\d]/g, '') || '0') * quantity;
+
+      // Create order in database
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          user_id: user.id,
+          status: 'pending',
+          total_amount: totalPrice,
+          delivery_address: `${formData.address}, ${formData.city}, ${formData.postalCode}`,
+          delivery_date: formData.deliveryDate || null,
+          payment_method: formData.paymentMethod === 'credit_card' ? 'Kartu Kredit' : 'Transfer Bank'
+        })
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      // Create order items
+      if (cartItems && cartItems.length > 0) {
+        // For cart checkout - create multiple order items
+        const orderItems = cartItems.map(item => ({
+          order_id: order.id,
+          product_id: item.id,
+          quantity: item.quantity,
+          price_at_time: item.price
+        }));
+
+        const { error: itemsError } = await supabase
+          .from('order_items')
+          .insert(orderItems);
+
+        if (itemsError) throw itemsError;
+      } else if (productName && productPrice) {
+        // For single product checkout - find product ID first
+        const { data: products, error: productError } = await supabase
+          .from('products')
+          .select('id')
+          .eq('name', productName)
+          .limit(1);
+
+        if (productError) throw productError;
+
+        if (products && products.length > 0) {
+          const { error: itemError } = await supabase
+            .from('order_items')
+            .insert({
+              order_id: order.id,
+              product_id: products[0].id,
+              quantity: quantity,
+              price_at_time: productPrice
+            });
+
+          if (itemError) throw itemError;
+        }
+      }
+
+      toast({
+        title: "Pesanan berhasil!",
+        description: "Pesanan Anda telah diterima dan akan segera diproses.",
+      });
+      
+      // Show order history after successful payment
+      setShowOrderHistory(true);
+      
+      // Call onSuccess callback if provided (for cart checkout)
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error: any) {
+      console.error('Error creating order:', error);
+      toast({
+        title: "Error",
+        description: "Terjadi kesalahan saat memproses pesanan: " + error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
   };
 

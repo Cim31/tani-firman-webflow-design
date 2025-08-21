@@ -9,10 +9,10 @@ import AdminButton from './AdminButton';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, profile, signOut } = useAuth();
 
   const handleLogout = () => {
-    logout();
+    signOut();
     setIsMenuOpen(false);
   };
 
@@ -52,11 +52,11 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            {user?.isAdmin ? <AdminButton /> : <CartButton />}
+            {profile?.is_admin ? <AdminButton /> : <CartButton />}
             {user ? (
               <div className="flex items-center space-x-2">
                 <span className="text-gray-700">
-                  Halo, {user.isAdmin ? 'Admin ' : ''}{user.name}
+                  Halo, {profile?.is_admin ? 'Admin ' : ''}{profile?.full_name || user?.email?.split('@')[0]}
                 </span>
                 <Button variant="outline" onClick={handleLogout}>
                   Logout
@@ -78,7 +78,7 @@ const Header = () => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-2">
-            {user?.isAdmin ? <AdminButton /> : <CartButton />}
+            {profile?.is_admin ? <AdminButton /> : <CartButton />}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-600 hover:text-green-600 transition-colors"
@@ -134,7 +134,7 @@ const Header = () => {
               {user ? (
                 <div className="pt-4 border-t border-gray-200">
                   <p className="text-gray-700 mb-2">
-                    Halo, {user.isAdmin ? 'Admin ' : ''}{user.name}
+                    Halo, {profile?.is_admin ? 'Admin ' : ''}{profile?.full_name || user?.email?.split('@')[0]}
                   </p>
                   <Button variant="outline" onClick={handleLogout} className="w-full">
                     Logout

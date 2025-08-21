@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import OrderHistory from './OrderHistory';
 
 const Dashboard = () => {
-  const { user, logout, isLoggedIn } = useAuth();
+  const { isLoggedIn, profile, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
 
   if (!isLoggedIn) {
@@ -21,12 +21,12 @@ const Dashboard = () => {
             <User className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-800">Selamat datang, {user?.name || user?.email}</h3>
+            <h3 className="font-semibold text-gray-800">Selamat datang, {profile?.full_name || profile?.email}</h3>
             <p className="text-sm text-gray-600">Dashboard Pelanggan</p>
           </div>
         </div>
         <Button 
-          onClick={logout} 
+          onClick={signOut} 
           variant="outline" 
           size="sm"
           className="text-red-600 border-red-600 hover:bg-red-50"

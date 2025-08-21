@@ -6,10 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '../contexts/AuthContext';
+import { toast } from '@/hooks/use-toast';
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,7 +19,7 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
-  const { login } = useAuth();
+  const { signUp } = useAuth();
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,24 +30,55 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Simple validation
     if (formData.password !== formData.confirmPassword) {
-      alert('Password tidak cocok!');
+      toast({
+        title: "Error",
+        description: "Password tidak cocok!",
+        variant: "destructive"
+      });
       return;
     }
     
     if (formData.password.length < 6) {
-      alert('Password minimal 6 karakter!');
+      toast({
+        title: "Error", 
+        description: "Password minimal 6 karakter!",
+        variant: "destructive"
+      });
       return;
     }
 
-    // Simulate registration and auto-login with name
-    console.log('Registration attempt:', formData);
-    login(formData.email, formData.password, formData.name);
-    navigate('/'); // Redirect to home after registration
+    setLoading(true);
+    
+    try {
+      const { error } = await signUp(formData.email, formData.password, formData.name);
+      
+      if (error) {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Registrasi berhasil! Silakan cek email untuk verifikasi."
+        });
+        navigate('/login');
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Terjadi kesalahan saat registrasi",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -182,9 +215,9 @@ const Register = () => {
               </div>
 
               {/* Submit Button */}
-              <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
+              <Button type="submit" disabled={loading} className="w-full bg-green-600 hover:bg-green-700">
                 <UserPlus className="h-4 w-4 mr-2" />
-                Daftar Sekarang
+                {loading ? 'Memproses...' : 'Daftar Sekarang'}
               </Button>
             </form>
 

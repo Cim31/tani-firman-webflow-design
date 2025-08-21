@@ -1,90 +1,85 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Package, Calendar, MapPin, CreditCard, Eye } from 'lucide-react';
-import benihPadi from '@/assets/benih-padi.jpg';
-import pupukOrganik from '@/assets/pupuk-organik.jpg';
-import pestisida from '@/assets/pestisida.jpg';
-import benihJagung from '@/assets/benih-jagung.jpg';
-import pupukCair from '@/assets/pupuk-cair.jpg';
-import cangkul from '@/assets/cangkul.jpg';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 
 interface OrderItem {
-  id: number;
-  name: string;
-  price: string;
+  id: string;
+  product_id: number;
   quantity: number;
-  image: string;
+  price_at_time: string;
+  product: {
+    id: number;
+    name: string;
+    image: string;
+  };
 }
 
 interface Order {
   id: string;
-  date: string;
-  items: OrderItem[];
-  total: string;
+  created_at: string;
   status: 'pending' | 'processing' | 'shipped' | 'delivered';
-  address: string;
-  paymentMethod: string;
-  deliveryDate: string;
+  total_amount: number;
+  delivery_address: string;
+  payment_method: string;
+  delivery_date: string | null;
+  order_items: OrderItem[];
 }
 
 const OrderHistory = () => {
   const { user, isLoggedIn } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log('OrderHistory - useEffect triggered', { isLoggedIn, user });
     if (isLoggedIn && user) {
-      console.log('User is logged in, setting up mock orders...');
-      // Mock order data - in real app, this would fetch from API
-      const mockOrders: Order[] = [
-        {
-          id: 'ORD-001',
-          date: '2024-01-15',
-          items: [
-            { id: 1, name: 'Benih Padi Unggul', price: 'Rp 45.000', quantity: 2, image: benihPadi },
-            { id: 2, name: 'Pupuk Organik', price: 'Rp 35.000', quantity: 1, image: pupukOrganik }
-          ],
-          total: 'Rp 125.000',
-          status: 'delivered',
-          address: 'Jl. Merdeka No. 123, Jakarta',
-          paymentMethod: 'Kartu Kredit',
-          deliveryDate: '2024-01-18'
-        },
-        {
-          id: 'ORD-002',
-          date: '2024-01-20',
-          items: [
-            { id: 3, name: 'Pestisida Organik', price: 'Rp 55.000', quantity: 1, image: pestisida }
-          ],
-          total: 'Rp 55.000',
-          status: 'shipped',
-          address: 'Jl. Merdeka No. 123, Jakarta',
-          paymentMethod: 'Transfer Bank',
-          deliveryDate: '2024-01-23'
-        },
-        {
-          id: 'ORD-003',
-          date: '2024-01-25',
-          items: [
-            { id: 4, name: 'Benih Jagung Hibrida', price: 'Rp 65.000', quantity: 1, image: benihJagung },
-            { id: 5, name: 'Pupuk Cair NPK', price: 'Rp 48.000', quantity: 2, image: pupukCair },
-            { id: 6, name: 'Cangkul Besi Berkualitas Tinggi', price: 'Rp 125.000', quantity: 1, image: cangkul }
-          ],
-          total: 'Rp 286.000',
-          status: 'processing',
-          address: 'Jl. Merdeka No. 123, Jakarta',
-          paymentMethod: 'Transfer Bank',
-          deliveryDate: '2024-01-28'
-        }
-      ];
-      setOrders(mockOrders);
+      fetchOrders();
+    } else {
+      setLoading(false);
     }
   }, [isLoggedIn, user]);
+
+  const fetchOrders = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select(`
+          *,
+          order_items (
+            id,
+            product_id,
+            quantity,
+            price_at_time,
+            product:products (
+              id,
+              name,
+              image
+            )
+          )
+        `)
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      // Type assertion to ensure proper types
+      const typedOrders = (data || []) as Order[];
+      setOrders(typedOrders);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Gagal memuat riwayat pesanan: " + error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getStatusColor = (status: Order['status']) => {
     switch (status) {
@@ -98,22 +93,47 @@ const OrderHistory = () => {
 
   const getStatusText = (status: Order['status']) => {
     switch (status) {
-      case 'pending': return 'Menunggu';
-      case 'processing': return 'Diproses';
-      case 'shipped': return 'Dikirim';
-      case 'delivered': return 'Selesai';
-      default: return status;
+      case 'pending': return 'Menunggu Konfirmasi';
+      case 'processing': return 'Sedang Diproses';
+      case 'shipped': return 'Dalam Pengiriman';
+      case 'delivered': return 'Terkirim';
+      default: return 'Unknown';
     }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('id-ID', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0
+    }).format(amount);
   };
 
   if (!isLoggedIn) {
     return (
-      <Card>
-        <CardContent className="p-6 text-center">
-          <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">Silakan login untuk melihat riwayat pesanan</p>
-        </CardContent>
-      </Card>
+      <div className="text-center py-12">
+        <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+        <h3 className="text-xl font-semibold text-gray-800 mb-2">Login Required</h3>
+        <p className="text-gray-600">Please login to view your order history</p>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        {[...Array(3)].map((_, index) => (
+          <div key={index} className="bg-gray-200 animate-pulse rounded-lg h-32"></div>
+        ))}
+      </div>
     );
   }
 
@@ -122,76 +142,95 @@ const OrderHistory = () => {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center space-x-2">
-              <Package className="h-5 w-5" />
-              <span>Detail Pesanan #{selectedOrder.id}</span>
-            </CardTitle>
-            <Button 
-              variant="outline" 
-              onClick={() => setSelectedOrder(null)}
-            >
+            <CardTitle>Detail Pesanan #{selectedOrder.id}</CardTitle>
+            <Button variant="outline" onClick={() => setSelectedOrder(null)}>
               Kembali
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Order Status */}
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-            <div>
-              <p className="font-semibold">Status Pesanan</p>
-              <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(selectedOrder.status)}`}>
-                {getStatusText(selectedOrder.status)}
-              </span>
+        <CardContent>
+          <div className="space-y-4">
+            {/* Order Status */}
+            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div>
+                <p className="text-sm text-gray-600">Status Pesanan</p>
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(selectedOrder.status)}`}>
+                  {getStatusText(selectedOrder.status)}
+                </span>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-gray-600">Total</p>
+                <p className="text-xl font-bold text-green-600">{formatCurrency(selectedOrder.total_amount)}</p>
+              </div>
             </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600">Total</p>
-              <p className="text-xl font-bold text-green-600">{selectedOrder.total}</p>
-            </div>
-          </div>
 
-          {/* Order Info */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <Calendar className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-600">Tanggal Pesanan: {selectedOrder.date}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-600">Alamat: {selectedOrder.address}</span>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <CreditCard className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-600">Pembayaran: {selectedOrder.paymentMethod}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Package className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-600">Estimasi Tiba: {selectedOrder.deliveryDate}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Order Items */}
-          <div>
-            <h3 className="font-semibold mb-3">Item Pesanan</h3>
-            <div className="space-y-3">
-              {selectedOrder.items.map((item) => (
-                <div key={item.id} className="flex items-center space-x-3 p-3 border rounded-lg">
-                  <img 
-                    src={item.image} 
-                    alt={item.name}
-                    className="w-16 h-16 object-cover rounded"
-                  />
-                  <div className="flex-1">
-                    <h4 className="font-medium">{item.name}</h4>
-                    <p className="text-sm text-gray-600">Jumlah: {item.quantity}</p>
-                    <p className="font-semibold text-green-600">{item.price}</p>
+            {/* Order Information */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-start space-x-3">
+                    <MapPin className="h-5 w-5 text-gray-400 mt-1" />
+                    <div>
+                      <p className="font-medium text-gray-800">Alamat Pengiriman</p>
+                      <p className="text-gray-600 text-sm">{selectedOrder.delivery_address}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-start space-x-3">
+                    <CreditCard className="h-5 w-5 text-gray-400 mt-1" />
+                    <div>
+                      <p className="font-medium text-gray-800">Metode Pembayaran</p>
+                      <p className="text-gray-600 text-sm">{selectedOrder.payment_method}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {selectedOrder.delivery_date && (
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-start space-x-3">
+                      <Calendar className="h-5 w-5 text-gray-400 mt-1" />
+                      <div>
+                        <p className="font-medium text-gray-800">Tanggal Pengiriman</p>
+                        <p className="text-gray-600 text-sm">{formatDate(selectedOrder.delivery_date)}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
+
+            {/* Order Items */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Daftar Produk</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {selectedOrder.order_items?.map((item) => (
+                    <div key={item.id} className="flex items-center space-x-4 p-3 border rounded-lg">
+                      <img
+                        src={item.product?.image || '/placeholder-image.jpg'}
+                        alt={item.product?.name}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-gray-800">{item.product?.name}</h4>
+                        <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium text-green-600">{item.price_at_time}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </CardContent>
       </Card>
@@ -201,51 +240,53 @@ const OrderHistory = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center space-x-2">
-          <Package className="h-5 w-5" />
-          <span>Riwayat Pesanan</span>
-        </CardTitle>
+        <CardTitle>Riwayat Pesanan</CardTitle>
       </CardHeader>
       <CardContent>
         {orders.length === 0 ? (
-          <div className="text-center py-8">
-            <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600">Belum ada pesanan</p>
+          <div className="text-center py-12">
+            <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-600">Belum ada riwayat pesanan</p>
           </div>
         ) : (
-          <div className="space-y-4">
-            {orders.map((order) => (
-              <div key={order.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <h3 className="font-semibold">#{order.id}</h3>
-                    <p className="text-sm text-gray-600">{order.date}</p>
-                  </div>
-                  <div className="text-right">
-                    <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Order ID</TableHead>
+                <TableHead>Tanggal</TableHead>
+                <TableHead>Items</TableHead>
+                <TableHead>Total</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {orders.map((order) => (
+                <TableRow key={order.id}>
+                  <TableCell className="font-medium">{order.id}</TableCell>
+                  <TableCell>{formatDate(order.created_at)}</TableCell>
+                  <TableCell>{order.order_items?.length || 0} item(s)</TableCell>
+                  <TableCell className="font-medium text-green-600">{formatCurrency(order.total_amount)}</TableCell>
+                  <TableCell>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
                       {getStatusText(order.status)}
                     </span>
-                  </div>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">
-                      {order.items.length} item • {order.total}
-                    </p>
-                  </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => setSelectedOrder(order)}
-                  >
-                    <Eye className="h-4 w-4 mr-2" />
-                    Lihat Detail
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedOrder(order)}
+                      className="flex items-center space-x-1"
+                    >
+                      <Eye className="h-4 w-4" />
+                      <span>Detail</span>
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         )}
       </CardContent>
     </Card>

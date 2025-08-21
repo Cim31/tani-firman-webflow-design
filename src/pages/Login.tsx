@@ -6,14 +6,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '../contexts/AuthContext';
+import { toast } from '@/hooks/use-toast';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-  const { login } = useAuth();
+  const { signIn } = useAuth();
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,10 +26,35 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    login(formData.email, formData.password);
-    navigate('/'); // Redirect to home after login
+    setLoading(true);
+    
+    try {
+      const { error } = await signIn(formData.email, formData.password);
+      
+      if (error) {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Success", 
+          description: "Login berhasil!"
+        });
+        navigate('/');
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Terjadi kesalahan saat login",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -107,9 +134,9 @@ const Login = () => {
               </div>
 
               {/* Submit Button */}
-              <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
+              <Button type="submit" disabled={loading} className="w-full bg-green-600 hover:bg-green-700">
                 <LogIn className="h-4 w-4 mr-2" />
-                Masuk
+                {loading ? 'Memproses...' : 'Masuk'}
               </Button>
             </form>
 

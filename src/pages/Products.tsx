@@ -1,81 +1,59 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import { Search, Filter } from 'lucide-react';
-import pupukOrganik from '@/assets/pupuk-organik.jpg';
-import benihPadi from '@/assets/benih-padi.jpg';
-import pestisida from '@/assets/pestisida.jpg';
-import benihJagung from '@/assets/benih-jagung.jpg';
-import pupukCair from '@/assets/pupuk-cair.jpg';
-import insektisida from '@/assets/insektisida.jpg';
-import cangkul from '@/assets/cangkul.jpg';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
+
+interface Product {
+  id: number;
+  name: string;
+  price: string;
+  original_price: string | null;
+  image: string;
+  category: string;
+  rating: number;
+  in_stock: boolean;
+  description?: string;
+}
 
 const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState('Semua');
   const [searchTerm, setSearchTerm] = useState('');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const categories = ['Semua', 'Benih', 'Pupuk', 'Alat Pertanian', 'Pestisida'];
+  const categories = ['Semua', 'Bibit', 'Pupuk', 'Alat', 'Pestisida'];
 
-  const products = [
-    {
-      id: 1,
-      name: 'Benih Padi Unggul IR64',
-      price: 'Rp 85.000',
-      originalPrice: 'Rp 95.000',
-      image: benihPadi,
-      category: 'Benih',
-      rating: 5,
-      inStock: true,
-    },
-    {
-      id: 2,
-      name: 'Pupuk Organik Kompos Premium',
-      price: 'Rp 45.000',
-      image: pupukOrganik,
-      category: 'Pupuk', 
-      rating: 4,
-      inStock: true,
-    },
-    {
-      id: 3,
-      name: 'Cangkul Besi Berkualitas Tinggi',
-      price: 'Rp 125.000',
-      originalPrice: 'Rp 140.000',
-      image: cangkul,
-      category: 'Alat Pertanian',
-      rating: 5,
-      inStock: true,
-    },
-    {
-      id: 4,
-      name: 'Benih Jagung Hibrida',
-      price: 'Rp 65.000',
-      image: benihJagung,
-      category: 'Benih',
-      rating: 4,
-      inStock: false,
-    },
-    {
-      id: 5,
-      name: 'Pestisida Organik Anti Hama',
-      price: 'Rp 35.000',
-      image: pestisida,
-      category: 'Pestisida',
-      rating: 4,
-      inStock: true,
-    },
-    {
-      id: 6,
-      name: 'Pupuk NPK 16-16-16',
-      price: 'Rp 75.000',
-      image: pupukCair,
-      category: 'Pupuk',
-      rating: 5,
-      inStock: true,
-    },
-  ];
+  // Fetch products from Supabase
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          throw error;
+        }
+
+        setProducts(data || []);
+      } catch (error: any) {
+        toast({
+          title: "Error",
+          description: "Gagal memuat produk: " + error.message,
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const filteredProducts = products.filter(product => {
     const matchesCategory = selectedCategory === 'Semua' || product.category === selectedCategory;
@@ -126,15 +104,32 @@ const Products = () => {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map(product => (
-            <ProductCard key={product.id} {...product} />
-          ))}
-        </div>
-
-        {filteredProducts.length === 0 && (
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, index) => (
+              <div key={index} className="bg-gray-200 animate-pulse rounded-lg h-80"></div>
+            ))}
+          </div>
+        ) : filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredProducts.map(product => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                price={product.price}
+                originalPrice={product.original_price}
+                image={product.image}
+                category={product.category}
+                rating={product.rating}
+                inStock={product.in_stock}
+              />
+            ))}
+          </div>
+        ) : (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">Tidak ada produk yang ditemukan.</p>
+            <p className="text-gray-400 text-sm mt-2">Coba ubah filter atau kata kunci pencarian</p>
           </div>
         )}
       </div>

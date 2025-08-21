@@ -6,10 +6,10 @@ import { useAuth } from '../contexts/AuthContext';
 import AdminModal from './AdminModal';
 
 const AdminButton = () => {
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const [isAdminOpen, setIsAdminOpen] = useState(false);
 
-  if (!user?.isAdmin) return null;
+  if (!profile?.is_admin) return null;
 
   return (
     <>
